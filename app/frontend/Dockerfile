@@ -21,8 +21,8 @@ COPY package.json package-lock.json /app-frontend/
 
 RUN npm install
 
-COPY . /app-frontend
+COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "start"]
