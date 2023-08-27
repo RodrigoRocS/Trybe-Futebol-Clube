@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -9,7 +10,7 @@ import db from '.';
 class Team extends Model
   <InferAttributes<Team>,
   InferCreationAttributes<Team>> {
-  declare id: number;
+  declare id: CreationOptional<number>;
   declare teamName: string;
 }
 
