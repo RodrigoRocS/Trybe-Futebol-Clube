@@ -21,7 +21,7 @@ COPY package.json package-lock.json packages.npm /app-backend/
 
 RUN npm install
 
-COPY . /app-backend
+COPY . .
 
 EXPOSE 3001
 
