@@ -9,7 +9,9 @@ export type ServiceResponseError = {
 
 export type ServiceResponseSuccess<T> = {
   status: 'SUCCESSFUL',
-  data: T
+  data: T | null
 };
 
 export type ServiceResponse<T> = ServiceResponseError | ServiceResponseSuccess<T>;
+
+// fonte: https://github.com/tryber/sd-029-a-live-lectures/blob/lecture/back-end-10.1/src/utils/mapStatusHTTP.ts

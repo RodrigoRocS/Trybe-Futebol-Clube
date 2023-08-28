@@ -20,3 +20,5 @@ export interface ICRUDModelDeleter {
 export interface ICRUDModel<T>
   extends ICRUDModelCreator<T>, ICRUDModelReader<T>, ICRUDModelUpdater<T>,
   ICRUDModelDeleter { }
+
+// fonte: https://github.com/tryber/sd-029-a-live-lectures/blob/lecture/back-end-10.1/src/interfaces/ICRUDModel.ts
