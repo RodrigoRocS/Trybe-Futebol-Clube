@@ -24,9 +24,13 @@ class Validations {
     if (!token) {
       return res.status(401).json({ message: 'Token not found' });
     }
-    const validToken = JWT.verify(token);
-    if (validToken === 'Token must be a valid Token') {
-      return res.status(401).json({ message: validToken });
+    const tokenWhitoutBearer = token.startsWith('Bearer ')
+      ? token.split(' ')[1]
+      : token;
+    const validToken = JWT.verify(tokenWhitoutBearer);
+
+    if (typeof validToken === 'string') {
+      return res.status(401).json({ message: 'Token must be a valid token' });
     }
     next();
   }

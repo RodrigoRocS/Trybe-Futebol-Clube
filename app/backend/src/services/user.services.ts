@@ -5,6 +5,7 @@ import { IUserModel } from '../Interfaces/Users/IUserModel';
 import UserModel from '../models/UserModel';
 import { IToken } from '../Interfaces/Login/IToken';
 import JWT from '../utils/JWT';
+import { IUser } from '../Interfaces/Users/IUser';
 
 export default class UserService {
   constructor(
@@ -15,7 +16,6 @@ export default class UserService {
 
   public async login(data: ILogin):Promise<ServiceResponse<IToken | ServiceMessage>> {
     const user = await this.userModel.findbyEmail(data.email);
-    console.log(user);
 
     if (!user) return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     if (!bcrypt.compareSync(data.password, user.password)) {
@@ -23,5 +23,24 @@ export default class UserService {
     }
     const token = JWT.sign({ email: data.email });
     return { status: 'SUCCESSFUL', data: { token } };
+  }
+
+  public async verifyRole(data: IToken):Promise<ServiceResponse<Partial<IUser> | ServiceMessage>> {
+    const verifyResult = JWT.verify(data.token);
+
+    if (typeof verifyResult === 'string') {
+      return { status: 'UNAUTHORIZED', data: { message: verifyResult } };
+    }
+
+    const { email } = verifyResult;
+    const user = await this.userModel.findbyEmail(email);
+
+    if (!user) {
+      return { status: 'UNAUTHORIZED', data: { message: 'User not found' } };
+    }
+
+    const { role } = user;
+
+    return { status: 'SUCCESSFUL', data: { role } };
   }
 }

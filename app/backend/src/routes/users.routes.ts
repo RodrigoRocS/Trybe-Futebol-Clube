@@ -9,8 +9,13 @@ const router = Router();
 router.post(
   '/',
   Validations.userValidation,
-
   (req: Request, res: Response) => userController.login(req, res),
+);
+
+router.get(
+  '/role',
+  Validations.tokenValidation,
+  (req: Request, res: Response) => userController.takeRole(req, res),
 );
 
 export default router;
