@@ -9,7 +9,6 @@ export default class UserController {
 
   public async login(req: Request, res: Response): Promise<Response> {
     const serviceResponse = await this.userService.login(req.body);
-    console.log(serviceResponse);
 
     if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);

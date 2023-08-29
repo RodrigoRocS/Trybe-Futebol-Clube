@@ -15,11 +15,9 @@ export default class UserService {
 
   public async login(data: ILogin):Promise<ServiceResponse<IToken | ServiceMessage>> {
     const user = await this.userModel.findbyEmail(data.email);
-    if (!data.email || !data.password) {
-      return {
-        status: 'BAD_REQUEST', data: { message: 'All fields must be filled' } };
-    }
-    if (!user) return { status: 'NOT_FOUND', data: { message: 'User not found' } };
+    console.log(user);
+
+    if (!user) return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     if (!bcrypt.compareSync(data.password, user.password)) {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
