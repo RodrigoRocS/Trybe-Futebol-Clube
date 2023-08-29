@@ -17,7 +17,7 @@ export default class UserService {
     const user = await this.userModel.findbyEmail(data.email);
     if (!data.email || !data.password) {
       return {
-        status: 'INVALID_DATA', data: { message: 'All fields must be filled' } };
+        status: 'BAD_REQUEST', data: { message: 'All fields must be filled' } };
     }
     if (!user) return { status: 'NOT_FOUND', data: { message: 'User not found' } };
     if (!bcrypt.compareSync(data.password, user.password)) {
