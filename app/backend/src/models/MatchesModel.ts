@@ -2,6 +2,7 @@ import { IMatchModel } from '../Interfaces/Matches/IMatchesModel';
 import Match from '../database/models/Matches';
 import { IMatch } from '../Interfaces/Matches/IMatches';
 import Team from '../database/models/Teams';
+import { NewEntity } from '../Interfaces';
 
 export default class MatchesModel implements IMatchModel {
   private model = Match;
@@ -22,12 +23,18 @@ export default class MatchesModel implements IMatchModel {
     return user;
   }
 
-  async update(id: IMatch['id']): Promise<IMatch | null> {
-    await this.model.update(
-      { inProgress: false },
+  async update(id: IMatch['id'], data: Partial<IMatch>): Promise<IMatch | null> {
+    const [affectedRows] = await this.model.update(
+      { ...data },
       { where: { id } },
     );
+    if (affectedRows === 0) { return null; }
+    const user = await this.model.findByPk(id);
+    return user;
+  }
 
-    return null;
+  async create(data: NewEntity<IMatch>): Promise<IMatch> {
+    const createdMatch = await this.model.create(data);
+    return createdMatch;
   }
 }

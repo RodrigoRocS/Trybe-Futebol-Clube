@@ -16,4 +16,18 @@ router.patch(
   (req: Request, res: Response) => matchController.closehMatch(req, res),
 );
 
+router.patch(
+  '/:id',
+  Validations.tokenValidation,
+  (req: Request, res: Response) => matchController.updateScore(req, res),
+);
+
+router.post(
+  '/',
+  Validations.tokenValidation,
+
+  Validations.createMatchValidation,
+  (req: Request, res: Response) => matchController.newMatch(req, res),
+);
+
 export default router;

@@ -2,6 +2,7 @@ import MatchesModel from '../models/MatchesModel';
 import { IMatchModel } from '../Interfaces/Matches/IMatchesModel';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import { IMatch } from '../Interfaces/Matches/IMatches';
+import { NewEntity } from '../Interfaces';
 
 export default class MatchesService {
   constructor(
@@ -34,5 +35,54 @@ export default class MatchesService {
     await this.matchesModel.update(id, { inProgress: false });
 
     return { status: 'SUCCESSFUL', data: null };
+  }
+
+  public async updateScore(
+    id: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  ): Promise<ServiceResponse<IMatch | null>> {
+    const match = await this.matchesModel.findById(id);
+
+    if (!match) {
+      return { status: 'NOT_FOUND', data: { message: 'Match not found' } };
+    }
+
+    const updatedMatch = await this.matchesModel.update(id, { homeTeamGoals, awayTeamGoals });
+
+    return { status: 'SUCCESSFUL', data: updatedMatch };
+  }
+
+  private async validateTeams(
+    homeTeamId: number,
+    awayTeamId: number,
+  ): Promise<ServiceResponse<null>> {
+    const homeTeam = await this.matchesModel.findById(homeTeamId);
+    const awayTeam = await this.matchesModel.findById(awayTeamId);
+
+    if (!homeTeam || !awayTeam) {
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+    }
+
+    return { status: 'SUCCESSFUL', data: null };
+  }
+
+  public async newMatch(
+    homeTeamId: number,
+    awayTeamId: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  ): Promise<ServiceResponse<IMatch | null>> {
+    const checkTeam = await this.validateTeams(homeTeamId, awayTeamId);
+    if (checkTeam.status !== 'SUCCESSFUL') { return checkTeam; }
+    const newMatch: NewEntity<IMatch> = {
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress: true,
+    };
+    const matchCreated = await this.matchesModel.create(newMatch);
+    return { status: 'SUCCESSFUL', data: matchCreated };
   }
 }

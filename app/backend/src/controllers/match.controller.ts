@@ -42,4 +42,43 @@ export default class MatchController {
 
     return res.status(200).json({ message: 'Finished' });
   }
+
+  public async updateScore(req: Request, res: Response) {
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    const { id } = req.params;
+
+    const serviceResponse = await this.matchService.updateScore(
+      Number(id),
+      homeTeamGoals,
+      awayTeamGoals,
+    );
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    return res.status(200).json(serviceResponse.data);
+  }
+
+  public async newMatch(req: Request, res: Response) {
+    const {
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+    } = req.body;
+
+    const serviceResponse = await this.matchService.newMatch(
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+    );
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    return res.status(201).json(serviceResponse.data);
+  }
 }
