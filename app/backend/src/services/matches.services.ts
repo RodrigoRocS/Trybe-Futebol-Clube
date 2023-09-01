@@ -24,4 +24,15 @@ export default class MatchesService {
     const match = await this.matchesModel.findById(id);
     return { status: 'SUCCESSFUL', data: match };
   }
+
+  public async closehMatch(id: number): Promise<ServiceResponse<null>> {
+    const match = await this.matchesModel.findById(id);
+
+    if (!match) {
+      return { status: 'NOT_FOUND', data: { message: 'Match not found' } };
+    }
+    await this.matchesModel.update(id, { inProgress: false });
+
+    return { status: 'SUCCESSFUL', data: null };
+  }
 }

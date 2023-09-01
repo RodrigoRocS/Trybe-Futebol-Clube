@@ -21,4 +21,13 @@ export default class MatchesModel implements IMatchModel {
     if (!user) return null;
     return user;
   }
+
+  async update(id: IMatch['id']): Promise<IMatch | null> {
+    await this.model.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+
+    return null;
+  }
 }
