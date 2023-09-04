@@ -14,15 +14,36 @@ export default class LeaderboardService {
     const filteredMatches = matches.filter((match) => match.inProgress === false);
     const leaderboard = filteredMatches.map((e) => ({
       name: e.homeTeam?.teamName || '',
-      totalPoints: LdbUtils.totalPoints(filteredMatches, e.homeTeam?.teamName),
-      totalGames: LdbUtils.totalGames(filteredMatches, e.homeTeam?.teamName),
-      totalVictories: LdbUtils.totalWin(filteredMatches, e.homeTeam?.teamName),
-      totalDraws: LdbUtils.totalDraw(filteredMatches, e.homeTeam?.teamName),
-      totalLosses: LdbUtils.totalLoss(filteredMatches, e.homeTeam?.teamName),
-      goalsFavor: LdbUtils.totalGoals(filteredMatches, e.homeTeam?.teamName),
-      goalsOwn: LdbUtils.totalGoalsLoss(filteredMatches, e.homeTeam?.teamName),
-      goalsBalance: LdbUtils.goalsBalance(filteredMatches, e.homeTeam?.teamName),
-      efficiency: LdbUtils.efficiency(filteredMatches, e.homeTeam?.teamName),
+      totalPoints: LdbUtils.totalPoints(filteredMatches, e.homeTeam?.teamName, true),
+      totalGames: LdbUtils.totalGames(filteredMatches, e.homeTeam?.teamName, true),
+      totalVictories: LdbUtils.totalWin(filteredMatches, e.homeTeam?.teamName, true),
+      totalDraws: LdbUtils.totalDraw(filteredMatches, e.homeTeam?.teamName, true),
+      totalLosses: LdbUtils.totalLoss(filteredMatches, e.homeTeam?.teamName, true),
+      goalsFavor: LdbUtils.totalGoals(filteredMatches, e.homeTeam?.teamName, true),
+      goalsOwn: LdbUtils.totalGoalsLoss(filteredMatches, e.homeTeam?.teamName, true),
+      goalsBalance: LdbUtils.goalsBalance(filteredMatches, e.homeTeam?.teamName, true),
+      efficiency: LdbUtils.efficiency(filteredMatches, e.homeTeam?.teamName, true),
+    }));
+
+    const newLeaderboard = [...leaderboard];
+
+    return { status: 'SUCCESSFUL', data: LdbUtils.unique(newLeaderboard) };
+  }
+
+  public async awayLeaderboard(): Promise<ServiceResponse<ILeaderboards[]>> {
+    const matches = await this.matchesModel.findAll();
+    const filteredMatches = matches.filter((match) => match.inProgress === false);
+    const leaderboard = filteredMatches.map((e) => ({
+      name: e.awayTeam?.teamName || '',
+      totalPoints: LdbUtils.totalPoints(filteredMatches, e.awayTeam?.teamName, false),
+      totalGames: LdbUtils.totalGames(filteredMatches, e.awayTeam?.teamName, false),
+      totalVictories: LdbUtils.totalWin(filteredMatches, e.awayTeam?.teamName, false),
+      totalDraws: LdbUtils.totalDraw(filteredMatches, e.awayTeam?.teamName, false),
+      totalLosses: LdbUtils.totalLoss(filteredMatches, e.awayTeam?.teamName, false),
+      goalsFavor: LdbUtils.totalGoals(filteredMatches, e.awayTeam?.teamName, false),
+      goalsOwn: LdbUtils.totalGoalsLoss(filteredMatches, e.awayTeam?.teamName, false),
+      goalsBalance: LdbUtils.goalsBalance(filteredMatches, e.awayTeam?.teamName, false),
+      efficiency: LdbUtils.efficiency(filteredMatches, e.awayTeam?.teamName, false),
     }));
 
     const newLeaderboard = [...leaderboard];

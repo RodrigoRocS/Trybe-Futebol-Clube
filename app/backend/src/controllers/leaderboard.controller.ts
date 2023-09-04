@@ -16,4 +16,14 @@ export default class LeaderboardController {
 
     res.status(200).json(serviceResponse.data);
   }
+
+  public async awayLeaderboard(_req: Request, res: Response) {
+    const serviceResponse = await this.leaderboardService.awayLeaderboard();
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    res.status(200).json(serviceResponse.data);
+  }
 }
