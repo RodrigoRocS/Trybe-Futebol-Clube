@@ -15,4 +15,6 @@ const tokenValid = {
     token: 'abc123'
 }
 
-export default {validUser, userNoEmail, userNoPsw, tokenValid}
+const noExistentEmail = 'null@null.com';
+
+export default {validUser, userNoEmail, userNoPsw, tokenValid, noExistentEmail}

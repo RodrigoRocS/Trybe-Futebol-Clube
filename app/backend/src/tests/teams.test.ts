@@ -11,7 +11,7 @@ const { expect } = chai;
 
 
 
-describe('GET /teams', function () { 
+describe('Teams', function () { 
     beforeEach(function () { sinon.restore(); });
   
     it('Verifica se retorna todos os times cadastrados.', async function () {

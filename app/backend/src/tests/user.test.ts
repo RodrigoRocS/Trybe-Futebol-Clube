@@ -6,14 +6,14 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import userMock from './mocks/user.mock';
 import UserService from '../services/user.services';
-import { IToken } from '../Interfaces/Login/IToken';
+import UserModel from '../models/UserModel';
 
 chai.use(chaiHttp);
 const { expect } = chai;
 
 
 
-describe('POST /login', function () { 
+describe('Users', function () { 
     beforeEach(function () { sinon.restore(); });
   
     it('Verifica se retorna um token ao fazer login com dados validos.', async function () {
@@ -63,6 +63,13 @@ describe('POST /login', function () {
       
         expect(response.status).to.be.equal('SUCCESSFUL');
         expect(response.data).to.deep.equal({ role: 'admin' });
+      });
+
+      it('Verifica se retorna null quando o usuário não existe', async function () {
+        const userModel = new UserModel();
+        sinon.stub(userModel, 'findbyEmail').resolves(null)
+        const user = await userModel.findbyEmail(userMock.noExistentEmail);
+        expect(user).to.be.null;
       });
   
   });
